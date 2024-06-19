@@ -11,6 +11,7 @@ const userSchema = new Schema(
     name: { type: String },
     salt: Buffer,
     resetPasswordToken: { type: String, default: "" },
+    selectedCategories:{type:[String],required: false}
   },
   { timestamps: true }
 );
