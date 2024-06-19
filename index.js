@@ -16,6 +16,10 @@ const LocalStrategy = require("passport-local").Strategy;
 const session = require("express-session");
 const { User } = require("./model/User");
 const { isAuth, cookieExtractor } = require("./services/common");
+const MemoryStore = require('memorystore')(session)
+
+
+
 const cors = require("cors");
 const path = require("path");
 require("dotenv").config();
@@ -25,7 +29,14 @@ app.use(express.static("public"));
 const jwt = require("jsonwebtoken");
 const SECRET_KEY = process.env.SECRET_KEY;
 app.use(express.static(path.resolve(__dirname,'build')));
-
+app.use(session({
+  cookie: { maxAge: 86400000 },
+  store: new MemoryStore({
+    checkPeriod: 86400000 // prune expired entries every 24h
+  }),
+  resave: false,
+  secret: 'keyboard cat'
+}))
 // webhook
 
 app.use(cookieParser());
